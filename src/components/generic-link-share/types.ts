@@ -1,4 +1,4 @@
-interface DecreaseVolumeOnSpeakProps {
+interface GenericLinkShareProps {
     pluginName: string,
     pluginUuid: string,
 }
@@ -39,4 +39,4 @@ export interface PlaceholderEntry {
   value: string | boolean;
 }
 
-export { DecreaseVolumeOnSpeakProps, ExternalVideoMeetingSubscription, DataToGenericLink };
+export { GenericLinkShareProps, ExternalVideoMeetingSubscription, DataToGenericLink };
