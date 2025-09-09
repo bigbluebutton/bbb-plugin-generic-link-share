@@ -42,6 +42,7 @@ export function ModalToShareLink(props: ModalToShareLinkProps) {
   return showModal && (
     <Styled.PluginModal
       portalClassName="modal-low"
+      parentSelector={() => document.querySelector('#modals-container')}
       overlayClassName="modalOverlay"
       ariaHideApp={false}
       isOpen={showModal}
