@@ -39,9 +39,10 @@ export function ModalToShareLink(props: ModalToShareLinkProps) {
     } else setIsViewerUrlAlreadyFormated(false);
   }, [previousModalState]);
 
-  return (
+  return showModal && (
     <Styled.PluginModal
-      className="modal-high"
+      portalClassName="modal-low"
+      parentSelector={() => document.querySelector('#modals-container')}
       overlayClassName="modalOverlay"
       ariaHideApp={false}
       isOpen={showModal}

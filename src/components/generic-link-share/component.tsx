@@ -21,7 +21,7 @@ import GenericComponentLinkShare from '../generic-component/component';
 import {
   CurrentUserData,
   DataToGenericLink,
-  DecreaseVolumeOnSpeakProps,
+  GenericLinkShareProps,
   UserMetadataGraphqlResponse,
 } from './types';
 import { ModalToShareLink } from '../modal-to-share-link/component';
@@ -31,7 +31,7 @@ import { mergePlaceholdersList, replaceUrlPlaceholders } from './utils';
 import { USER_METADATA } from './subscription';
 
 function GenericLinkShare(
-  { pluginUuid: uuid }: DecreaseVolumeOnSpeakProps,
+  { pluginUuid: uuid }: GenericLinkShareProps,
 ): React.ReactElement {
   BbbPluginSdk.initialize(uuid);
   const pluginApi: PluginApi = BbbPluginSdk.getPluginApi(uuid);
