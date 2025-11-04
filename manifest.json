@@ -1,6 +1,7 @@
 {
   "requiredSdkVersion": "~0.0.84",
   "name": "GenericLinkShare",
+  "version": "0.1.0",
   "javascriptEntrypointUrl": "GenericLinkShare.js",
   "localesBaseUrl": "https://cdn.domain.com/pluginabc/",
   "dataChannels": [
