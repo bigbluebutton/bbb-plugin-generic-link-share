@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Anton Georgiev <anton.georgiev@blindsidenetworks.com>
 Build-Depends: debhelper (>= 13), nodejs (>= 18)
 Standards-Version: 4.1.4
-Homepage: https://github.com/bigbluebutton/plugin-generic-link-share
+Homepage: https://github.com/bigbluebutton/bbb-plugin-generic-link-share
 
 Package: bbb-plugin-generic-link-share
 Architecture: all
