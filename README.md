@@ -9,7 +9,7 @@ This plugin is one of the official BigBlueButton plugins. It basically opens up 
 To build the plugin for production use, follow these steps:
 
 ```bash
-cd $HOME/src/plugin-generic-link-share
+cd $HOME/src/bbb-plugin-generic-link-share
 npm ci
 npm run build-bundle
 ```
