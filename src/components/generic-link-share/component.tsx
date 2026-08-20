@@ -2,8 +2,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import {
-  ActionButtonDropdownOption,
-  ActionButtonDropdownSeparator,
+  MediaAreaOption,
   BbbPluginSdk,
   GenericContentMainArea,
   PluginApi,
@@ -220,13 +219,11 @@ function GenericLinkShare(
   // Set extensible areas (depending o the role of the user)
   useEffect(() => {
     if (currentUser?.presenter) {
-      const actionDropdownItemsToRender = [
-        new ActionButtonDropdownSeparator(),
-      ];
+      const mediaAreaItemsToRender = [];
       if (showingPresentationContent) {
-        actionDropdownItemsToRender.push(new ActionButtonDropdownOption({
+        mediaAreaItemsToRender.push(new MediaAreaOption({
           label: 'Edit link(s)',
-          icon: 'copy',
+          icon: { iconName: 'copy' },
           tooltip: 'Edit previously set links',
           allowed: true,
           onClick: () => {
@@ -234,9 +231,9 @@ function GenericLinkShare(
           },
         }));
       }
-      actionDropdownItemsToRender.push(new ActionButtonDropdownOption({
+      mediaAreaItemsToRender.push(new MediaAreaOption({
         label: showingPresentationContent ? 'Remove link share' : 'Share Website Link as Content',
-        icon: 'copy',
+        icon: { iconName: 'copy' },
         tooltip: showingPresentationContent ? 'Remove generic link from presentation area'
           : 'Share a generic link into the presentation area',
         allowed: true,
@@ -247,9 +244,9 @@ function GenericLinkShare(
           setShowModal(true);
         },
       }));
-      pluginApi.setActionButtonDropdownItems(actionDropdownItemsToRender);
+      pluginApi.setMediaAreaItems(mediaAreaItemsToRender);
     } else {
-      pluginApi.setActionButtonDropdownItems([]);
+      pluginApi.setMediaAreaItems([]);
     }
   }, [currentUser, showingPresentationContent]);
 
