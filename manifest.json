@@ -1,5 +1,5 @@
 {
-  "requiredSdkVersion": "~0.0.84",
+  "requiredSdkVersion": "^0.1.5",
   "name": "GenericLinkShare",
   "version": "0.1.0",
   "javascriptEntrypointUrl": "GenericLinkShare.js",
