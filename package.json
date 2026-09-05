@@ -39,7 +39,7 @@
     "react-iframe": "^1.8.5",
     "react-modal": "^3.16.1",
     "react-select": "^5.7.3",
-    "styled-components": "6.1.13"
+    "styled-components": "^6.5.3"
   },
   "devDependencies": {
     "@babel/core": "^7.21.8",
@@ -51,7 +51,7 @@
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.2.0",
     "babel-loader": "^9.1.2",
-    "copy-webpack-plugin": "^12.0.2",
+    "copy-webpack-plugin": "^14.0.0",
     "css-loader": "^6.7.4",
     "eslint": "^8.45.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -69,6 +69,6 @@
     "typescript": "^5.1.6",
     "webpack": "^5.83.1",
     "webpack-cli": "^5.1.1",
-    "webpack-dev-server": "^4.15.1"
+    "webpack-dev-server": "^6.0.0"
   }
 }
