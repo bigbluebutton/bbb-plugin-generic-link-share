@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "main": "./src/index.tsx",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build-bundle": "webpack --mode production",
     "build:watch": "rm -rf dist && tsc -w --module CommonJS",
@@ -26,7 +29,6 @@
   "dependencies": {
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "@types/node": "^20.3.1",
     "@types/react": "^18.2.13",
     "@types/react-dom": "^18.2.7",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
@@ -37,19 +39,19 @@
     "react-iframe": "^1.8.5",
     "react-modal": "^3.16.1",
     "react-select": "^5.7.3",
-    "styled-components": "6.1.13"
+    "styled-components": "^6.5.3"
   },
   "devDependencies": {
     "@babel/core": "^7.21.8",
     "@babel/preset-env": "^7.21.5",
     "@babel/preset-react": "^7.18.6",
-    "@types/node": "^20.4.4",
+    "@types/node": "^24.13.3",
     "@types/react": "^18.2.15",
     "@types/react-modal": "^3.16.0",
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.2.0",
     "babel-loader": "^9.1.2",
-    "copy-webpack-plugin": "^12.0.2",
+    "copy-webpack-plugin": "^14.0.0",
     "css-loader": "^6.7.4",
     "eslint": "^8.45.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -67,6 +69,6 @@
     "typescript": "^5.1.6",
     "webpack": "^5.83.1",
     "webpack-cli": "^5.1.1",
-    "webpack-dev-server": "^4.15.1"
+    "webpack-dev-server": "^6.0.0"
   }
 }
