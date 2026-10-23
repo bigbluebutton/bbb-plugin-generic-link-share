@@ -1,0 +1,23 @@
+{
+  "genericLinkSharePlugin.presentationToolbar.playButton.label": "{title} を表示",
+  "genericLinkSharePlugin.presentationToolbar.playButton.tooltip": "このスライドでリンクタグが検出されました。全員に表示しますか？",
+  "genericLinkSharePlugin.mediaArea.editLinks.label": "リンクを編集",
+  "genericLinkSharePlugin.mediaArea.editLinks.tooltip": "設定済みのリンクを編集",
+  "genericLinkSharePlugin.mediaArea.removeLinkShare.label": "リンクの共有を停止",
+  "genericLinkSharePlugin.mediaArea.removeLinkShare.tooltip": "プレゼンテーションエリアからリンクを削除",
+  "genericLinkSharePlugin.mediaArea.shareLink.label": "ウェブサイトのリンクをコンテンツとして共有",
+  "genericLinkSharePlugin.mediaArea.shareLink.tooltip": "プレゼンテーションエリアにリンクを共有",
+  "genericLinkSharePlugin.modal.title": "リンクを共有",
+  "genericLinkSharePlugin.modal.error.title": "エラー:",
+  "genericLinkSharePlugin.modal.error.clearButton.label": "クリア",
+  "genericLinkSharePlugin.modal.error.malformedLink": "リンクの形式が正しくありません。有効なリンクを入力してください",
+  "genericLinkSharePlugin.modal.linkForm.sameUrlForRoles.label": "発表者と参加者に同じURLを使用",
+  "genericLinkSharePlugin.modal.linkForm.url.label": "URL:",
+  "genericLinkSharePlugin.modal.linkForm.presenterUrl.label": "発表者用URL:",
+  "genericLinkSharePlugin.modal.linkForm.viewerUrl.label": "参加者用URL（後で設定できます）:",
+  "genericLinkSharePlugin.modal.linkForm.showPreviewButton.label": "プレビューを表示",
+  "genericLinkSharePlugin.modal.linkForm.hidePreviewButton.label": "プレビューを非表示",
+  "genericLinkSharePlugin.modal.linkForm.previewWarning": "「プレビューを表示」をクリックして、埋め込み時にウェブサイトが正しく動作するか確認してください（推奨）",
+  "genericLinkSharePlugin.modal.linkForm.cancelButton.label": "キャンセル",
+  "genericLinkSharePlugin.modal.linkForm.shareButton.label": "コンテンツとして共有"
+}

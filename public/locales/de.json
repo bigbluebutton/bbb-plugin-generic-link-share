@@ -1,0 +1,23 @@
+{
+  "genericLinkSharePlugin.presentationToolbar.playButton.label": "{title} anzeigen",
+  "genericLinkSharePlugin.presentationToolbar.playButton.tooltip": "In dieser Folie wurde ein Link-Tag erkannt. Für alle anzeigen?",
+  "genericLinkSharePlugin.mediaArea.editLinks.label": "Link(s) bearbeiten",
+  "genericLinkSharePlugin.mediaArea.editLinks.tooltip": "Zuvor festgelegte Links bearbeiten",
+  "genericLinkSharePlugin.mediaArea.removeLinkShare.label": "Link-Freigabe beenden",
+  "genericLinkSharePlugin.mediaArea.removeLinkShare.tooltip": "Link aus dem Präsentationsbereich entfernen",
+  "genericLinkSharePlugin.mediaArea.shareLink.label": "Website-Link als Inhalt teilen",
+  "genericLinkSharePlugin.mediaArea.shareLink.tooltip": "Einen Link im Präsentationsbereich teilen",
+  "genericLinkSharePlugin.modal.title": "Link teilen",
+  "genericLinkSharePlugin.modal.error.title": "Fehler:",
+  "genericLinkSharePlugin.modal.error.clearButton.label": "löschen",
+  "genericLinkSharePlugin.modal.error.malformedLink": "Der Link ist ungültig, bitte geben Sie einen gültigen Link ein",
+  "genericLinkSharePlugin.modal.linkForm.sameUrlForRoles.label": "Gleiche URL für Präsentator und Teilnehmer",
+  "genericLinkSharePlugin.modal.linkForm.url.label": "URL:",
+  "genericLinkSharePlugin.modal.linkForm.presenterUrl.label": "URL für Präsentator:",
+  "genericLinkSharePlugin.modal.linkForm.viewerUrl.label": "URL für Teilnehmer (kann später festgelegt werden):",
+  "genericLinkSharePlugin.modal.linkForm.showPreviewButton.label": "Vorschau anzeigen",
+  "genericLinkSharePlugin.modal.linkForm.hidePreviewButton.label": "Vorschau ausblenden",
+  "genericLinkSharePlugin.modal.linkForm.previewWarning": "Klicken Sie auf „Vorschau anzeigen“, um zu prüfen, ob die Website eingebettet korrekt funktioniert (empfohlen)",
+  "genericLinkSharePlugin.modal.linkForm.cancelButton.label": "Abbrechen",
+  "genericLinkSharePlugin.modal.linkForm.shareButton.label": "Als Inhalt teilen"
+}

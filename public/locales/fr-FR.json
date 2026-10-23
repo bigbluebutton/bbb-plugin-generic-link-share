@@ -1,0 +1,23 @@
+{
+  "genericLinkSharePlugin.presentationToolbar.playButton.label": "Afficher {title}",
+  "genericLinkSharePlugin.presentationToolbar.playButton.tooltip": "Une balise de lien a été détectée sur cette diapositive. L'afficher pour tous ?",
+  "genericLinkSharePlugin.mediaArea.editLinks.label": "Modifier le(s) lien(s)",
+  "genericLinkSharePlugin.mediaArea.editLinks.tooltip": "Modifier les liens définis précédemment",
+  "genericLinkSharePlugin.mediaArea.removeLinkShare.label": "Arrêter le partage du lien",
+  "genericLinkSharePlugin.mediaArea.removeLinkShare.tooltip": "Retirer le lien de la zone de présentation",
+  "genericLinkSharePlugin.mediaArea.shareLink.label": "Partager un lien de site web comme contenu",
+  "genericLinkSharePlugin.mediaArea.shareLink.tooltip": "Partager un lien dans la zone de présentation",
+  "genericLinkSharePlugin.modal.title": "Partagez votre lien",
+  "genericLinkSharePlugin.modal.error.title": "Erreur :",
+  "genericLinkSharePlugin.modal.error.clearButton.label": "effacer",
+  "genericLinkSharePlugin.modal.error.malformedLink": "Le lien est mal formé, veuillez en saisir un valide",
+  "genericLinkSharePlugin.modal.linkForm.sameUrlForRoles.label": "Même URL pour le présentateur et les participants",
+  "genericLinkSharePlugin.modal.linkForm.url.label": "URL :",
+  "genericLinkSharePlugin.modal.linkForm.presenterUrl.label": "URL du présentateur :",
+  "genericLinkSharePlugin.modal.linkForm.viewerUrl.label": "URL des participants (peut être définie plus tard) :",
+  "genericLinkSharePlugin.modal.linkForm.showPreviewButton.label": "Afficher l'aperçu",
+  "genericLinkSharePlugin.modal.linkForm.hidePreviewButton.label": "Masquer l'aperçu",
+  "genericLinkSharePlugin.modal.linkForm.previewWarning": "Cliquez sur « Afficher l'aperçu » pour vérifier que le site web fonctionne correctement une fois intégré (recommandé)",
+  "genericLinkSharePlugin.modal.linkForm.cancelButton.label": "Annuler",
+  "genericLinkSharePlugin.modal.linkForm.shareButton.label": "Partager comme contenu"
+}

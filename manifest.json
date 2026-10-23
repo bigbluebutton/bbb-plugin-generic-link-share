@@ -3,7 +3,7 @@
   "name": "GenericLinkShare",
   "version": "0.1.1",
   "javascriptEntrypointUrl": "GenericLinkShare.js",
-  "localesBaseUrl": "https://cdn.domain.com/pluginabc/",
+  "localesBaseUrl": "locales",
   "dataChannels": [
     {
       "name": "urlToGenericLink",
