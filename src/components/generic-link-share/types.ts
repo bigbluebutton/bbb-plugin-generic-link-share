@@ -34,6 +34,14 @@ export interface UserMetadataGraphqlResponse {
     user_metadata: UserMetadata[];
 }
 
+export type PluginSettings = Record<string, unknown>;
+
+// Link suggested to the presenter, from the plugin_GenericLinkShare_* parameters of /create
+export interface DefaultLink {
+  modalState: DataToGenericLink;
+  description: string;
+}
+
 export interface PlaceholderEntry {
   placeholder: string;
   value: string | boolean;

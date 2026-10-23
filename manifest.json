@@ -15,5 +15,28 @@
         "moderator"
       ]
     }
+  ],
+  "settingsSchema": [
+    {
+      "name": "defaultUrl",
+      "label": "Default URL suggested to the presenter",
+      "required": true,
+      "defaultValue": "${plugin_GenericLinkShare_default-url:}",
+      "type": "string"
+    },
+    {
+      "name": "defaultViewerUrl",
+      "label": "Default URL suggested for the viewers",
+      "required": true,
+      "defaultValue": "${plugin_GenericLinkShare_default-viewer-url:}",
+      "type": "string"
+    },
+    {
+      "name": "defaultUrlDescription",
+      "label": "Description shown below the default URL",
+      "required": true,
+      "defaultValue": "${plugin_GenericLinkShare_default-url-description:}",
+      "type": "string"
+    }
   ]
 }

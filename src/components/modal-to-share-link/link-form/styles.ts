@@ -78,6 +78,13 @@ export const WarningIframeMessage = styled.p`
   margin: .5rem 0 0 0;
 `;
 
+export const DefaultLinkDescription = styled.p`
+  color: #4e5a66;
+  font-size: 0.875rem;
+  margin: .5rem 0 0 0;
+  white-space: pre-line;
+`;
+
 export const SendingButton = styled.input`
   border: 3px solid transparent;
   overflow: visible;

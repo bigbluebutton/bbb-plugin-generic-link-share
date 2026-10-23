@@ -11,6 +11,7 @@ export function ModalToShareLink(props: ModalToShareLinkProps) {
   const {
     previousModalState,
     setPreviousModalState,
+    defaultLink,
     showModal,
     handleCloseModal,
     linkError,
@@ -81,6 +82,7 @@ export function ModalToShareLink(props: ModalToShareLinkProps) {
             <LinkForm
               previousModalState={previousModalState}
               setPreviousModalState={setPreviousModalState}
+              defaultLink={defaultLink}
               handleCloseModal={handleCloseModal}
               handleSendLinkToIframe={handleSendLinkToIframe}
               handleCheckboxChange={handleCheckboxChange}

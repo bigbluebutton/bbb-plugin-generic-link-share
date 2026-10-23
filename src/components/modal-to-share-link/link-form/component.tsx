@@ -5,11 +5,13 @@ import * as Styled from './styles';
 import { TextInputComponent } from './text-input/component';
 import { CheckboxInputComponent } from './checkbox-input/component';
 import { LinkFormProps, UrlPreview } from './types';
+import { isDefaultLinkUnchanged } from '../../generic-link-share/utils';
 
 export function LinkForm(props: LinkFormProps) {
   const {
     previousModalState,
     setPreviousModalState,
+    defaultLink,
     handleCloseModal,
     handleSendLinkToIframe,
     handleCheckboxChange,
@@ -27,6 +29,10 @@ export function LinkForm(props: LinkFormProps) {
   const viewerUrl = incomingViewerUrl || '';
 
   const [urlToPreview, setUrlToPreview] = useState<UrlPreview>(null);
+
+  // The description belongs to the suggested link: it goes away once the link is changed
+  const showDefaultLinkDescription = !!defaultLink.description
+    && isDefaultLinkUnchanged(previousModalState, defaultLink);
 
   const isUrlPreviewing = urlToPreview && !urlToPreview?.isViewer;
   const isViewerUrlPreviewing = !!urlToPreview?.isViewer;
@@ -72,6 +78,11 @@ export function LinkForm(props: LinkFormProps) {
               url={viewerUrl}
               isViewer
             />
+          )}
+          {showDefaultLinkDescription && (
+            <Styled.DefaultLinkDescription>
+              {defaultLink.description}
+            </Styled.DefaultLinkDescription>
           )}
           {(isUrlAlreadyFormated || isViewerUrlAlreadyFormated) && (
             <Styled.WarningIframeMessage>

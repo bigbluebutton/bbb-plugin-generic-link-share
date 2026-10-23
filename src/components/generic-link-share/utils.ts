@@ -1,4 +1,6 @@
-import { CurrentUserData, PlaceholderEntry, UserMetadata } from './types';
+import {
+  CurrentUserData, DataToGenericLink, DefaultLink, PlaceholderEntry, PluginSettings, UserMetadata,
+} from './types';
 
 const DEFAULT_PREFIX = 'genericLinkShare';
 
@@ -44,4 +46,44 @@ export function replaceUrlPlaceholders(
   });
 
   return result;
+}
+
+export const EMPTY_MODAL_STATE: DataToGenericLink = {
+  isUrlSameForRole: true,
+  url: null,
+};
+
+function readStringSetting(settings: PluginSettings | undefined, name: string): string {
+  const value: unknown = settings?.[name];
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+// Builds the link suggested to the presenter from the plugin settings, which bbb-web fills
+// with the plugin_GenericLinkShare_* parameters of the /create call (see manifest.json).
+// A single URL is suggested for everyone; two different ones are split between roles.
+export function getDefaultLink(settings?: PluginSettings): DefaultLink {
+  const url = readStringSetting(settings, 'defaultUrl');
+  const viewerUrl = readStringSetting(settings, 'defaultViewerUrl');
+  const description = readStringSetting(settings, 'defaultUrlDescription');
+
+  let modalState: DataToGenericLink = EMPTY_MODAL_STATE;
+  if (url && viewerUrl && url !== viewerUrl) {
+    modalState = { isUrlSameForRole: false, url, viewerUrl };
+  } else if (url || viewerUrl) {
+    modalState = { isUrlSameForRole: true, url: url || viewerUrl };
+  }
+  return { modalState, description };
+}
+
+// Whether the modal still holds the suggested link, untouched by the presenter
+export function isDefaultLinkUnchanged(
+  modalState: DataToGenericLink,
+  defaultLink: DefaultLink,
+): boolean {
+  const { modalState: defaultState } = defaultLink;
+  if (!defaultState.url) return false;
+  return modalState.isUrlSameForRole === defaultState.isUrlSameForRole
+    && (modalState.url || '') === (defaultState.url || '')
+    && (modalState.isUrlSameForRole
+      || (modalState.viewerUrl || '') === (defaultState.viewerUrl || ''));
 }
