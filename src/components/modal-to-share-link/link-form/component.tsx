@@ -15,6 +15,7 @@ export function LinkForm(props: LinkFormProps) {
     handleCheckboxChange,
     isUrlAlreadyFormated,
     isViewerUrlAlreadyFormated,
+    isShareDisabled,
   } = props;
 
   const {
@@ -93,7 +94,12 @@ export function LinkForm(props: LinkFormProps) {
         >
           Cancel
         </Styled.ButtonStyle>
-        <Styled.SendingButton type="submit" value="Share as content" />
+        <Styled.SendingButton
+          type="submit"
+          value="Share as content"
+          disabled={isShareDisabled}
+          title={isShareDisabled ? 'This link is already being shared' : undefined}
+        />
       </Styled.ButtonsWrapper>
     </Styled.FormToSendUrl>
   );

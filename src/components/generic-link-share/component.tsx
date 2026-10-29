@@ -27,7 +27,7 @@ import {
 import { ModalToShareLink } from '../modal-to-share-link/component';
 import { LinkTag } from '../modal-to-share-link/types';
 import { REGEX } from './constants';
-import { mergePlaceholdersList, replaceUrlPlaceholders } from './utils';
+import { isSameSharedLink, mergePlaceholdersList, replaceUrlPlaceholders } from './utils';
 import { USER_METADATA } from './subscription';
 
 // How many times the link may be put back on top of the same older content,
@@ -78,6 +78,13 @@ function GenericLinkShare(
     isUrlSameForRole: true,
     url: null,
   });
+  // Links of the entry being shown. Sharing them again would recreate the generic
+  // content for everyone and lose what users were doing in the page, so it is not
+  // allowed. Also kept in a ref: the toolbar buttons only see the state from when
+  // they were created.
+  const [sharedLink, setSharedLink] = useState<DataToGenericLink>(null);
+  const sharedLinkRef = useRef<DataToGenericLink>(null);
+  sharedLinkRef.current = sharedLink;
   // Identity and server time of the data-channel entry being shown. A new entry
   // (a share again, even with the same URL) recreates the generic content, which
   // puts it back on top of the presentation area for everyone.
@@ -143,12 +150,14 @@ function GenericLinkShare(
           tooltip: 'A generic link tag has been detected in this slide, show it to all?',
           style: {},
           onClick: () => {
-            deleteEntryUrlToGenericLink([RESET_DATA_CHANNEL]);
-            pushEntryUrlToGenericLink({
+            const tagLink: DataToGenericLink = {
               url: tag.presenter,
               isUrlSameForRole: tag.presenter === tag.viewer,
               viewerUrl: tag.viewer,
-            });
+            };
+            if (isSameSharedLink(tagLink, sharedLinkRef.current)) return;
+            deleteEntryUrlToGenericLink([RESET_DATA_CHANNEL]);
+            pushEntryUrlToGenericLink(tagLink);
           },
         })
       ));
@@ -203,7 +212,9 @@ function GenericLinkShare(
         };
       }
     }
-    if (objectToDispatch) {
+    if (objectToDispatch && isSameSharedLink(objectToDispatch, sharedLink)) {
+      setShowModal(false);
+    } else if (objectToDispatch) {
       deleteEntryUrlToGenericLink([RESET_DATA_CHANNEL]);
       pushEntryUrlToGenericLink(objectToDispatch);
       setShowModal(false);
@@ -222,6 +233,7 @@ function GenericLinkShare(
       const lastEntry = urlToGenericLink.data[urlToGenericLink.data.length - 1];
       setLinkEntryId(lastEntry.entryId);
       setLinkSharedAt(toTime(lastEntry.createdAt));
+      setSharedLink(lastEntry.payloadJson);
       setPreviousModalState(urlToGenericLink
         .data[
           urlToGenericLink.data.length - 1]?.payloadJson);
@@ -253,6 +265,7 @@ function GenericLinkShare(
       setLink(null);
       setLinkEntryId(null);
       setLinkSharedAt(null);
+      setSharedLink(null);
       setPreviousModalState({
         isUrlSameForRole: true,
         url: null,
@@ -385,6 +398,7 @@ function GenericLinkShare(
         handleSendLinkToIframe,
         handleCheckboxChange,
         setLinkError,
+        isShareDisabled: isSameSharedLink(previousModalState, sharedLink),
       }}
     />
   );

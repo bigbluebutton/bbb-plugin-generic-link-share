@@ -94,6 +94,11 @@ export const SendingButton = styled.input`
   &:hover {
     border: 3px solid #0f70d7;
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
   padding: 0.45rem 1rem;
   background-color: #0f70d7;
   color: #fff;
