@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import {
   MediaAreaOption,
@@ -21,24 +21,49 @@ import {
   CurrentUserData,
   DataToGenericLink,
   GenericLinkShareProps,
+  PresentationAreaContentTimes,
   UserMetadataGraphqlResponse,
 } from './types';
 import { ModalToShareLink } from '../modal-to-share-link/component';
 import { LinkTag } from '../modal-to-share-link/types';
 import { REGEX } from './constants';
-import { mergePlaceholdersList, replaceUrlPlaceholders } from './utils';
+import { isSameSharedLink, mergePlaceholdersList, replaceUrlPlaceholders } from './utils';
 import { USER_METADATA } from './subscription';
+
+// How many times the link may be put back on top of the same older content,
+// so two contents fighting for the presentation area can never loop.
+const MAX_RAISES_PER_CONTENT = 3;
+
+// Keeps only what the plugin needs from the meeting, so other meeting changes do
+// not reach the plugin state (useMeetingData compares the projected value)
+type MeetingDataProjection = Parameters<PluginApi['useMeetingData']>[0];
+const projectContentTimes: MeetingDataProjection = (meeting) => {
+  const { screenshare, externalVideo } = meeting as typeof meeting & PresentationAreaContentTimes;
+  const contentTimes: PresentationAreaContentTimes = {
+    screenshare: { startedAt: screenshare?.startedAt ?? null },
+    externalVideo: {
+      externalVideoUrl: externalVideo?.externalVideoUrl ?? null,
+      startedSharingAt: externalVideo?.startedSharingAt ?? null,
+    },
+  };
+  return contentTimes as ReturnType<MeetingDataProjection>;
+};
+
+const toTime = (value?: string | number | null): number | null => {
+  if (value === null || value === undefined || value === '') return null;
+  const time = typeof value === 'number' ? value : Date.parse(value);
+  return Number.isNaN(time) ? null : time;
+};
 
 function GenericLinkShare(
   { pluginUuid: uuid }: GenericLinkShareProps,
 ): React.ReactElement {
   BbbPluginSdk.initialize(uuid);
   const pluginApi: PluginApi = BbbPluginSdk.getPluginApi(uuid);
-  const userMetaDataSubscription = pluginApi
-    .useCustomSubscription<UserMetadataGraphqlResponse>(USER_METADATA);
+  const { data: userData, loading: userDataLoading } = pluginApi
+    .useCustomQuery<UserMetadataGraphqlResponse>(USER_METADATA);
   const { data: currentUser } = pluginApi.useCurrentUser();
   const { data: urlToGenericLink, pushEntry: pushEntryUrlToGenericLink, deleteEntry: deleteEntryUrlToGenericLink } = pluginApi.useDataChannel<DataToGenericLink>('urlToGenericLink');
-  const { data: userData } = userMetaDataSubscription;
   const currentPresentationResponse = pluginApi.useCurrentPresentation();
   const currentLayout = pluginApi.useUiData(LayoutPresentationAreaUiDataNames.CURRENT_ELEMENT, [{
     isOpen: true,
@@ -53,6 +78,28 @@ function GenericLinkShare(
     isUrlSameForRole: true,
     url: null,
   });
+  // Links of the entry being shown. Sharing them again would recreate the generic
+  // content for everyone and lose what users were doing in the page, so it is not
+  // allowed. Also kept in a ref: the toolbar buttons only see the state from when
+  // they were created.
+  const [sharedLink, setSharedLink] = useState<DataToGenericLink>(null);
+  const sharedLinkRef = useRef<DataToGenericLink>(null);
+  sharedLinkRef.current = sharedLink;
+  // Identity and server time of the data-channel entry being shown. A new entry
+  // (a share again, even with the same URL) recreates the generic content, which
+  // puts it back on top of the presentation area for everyone.
+  const [linkEntryId, setLinkEntryId] = useState<string>(null);
+  const [linkSharedAt, setLinkSharedAt] = useState<number>(null);
+  const [raiseCount, setRaiseCount] = useState<number>(0);
+  const raisesByContent = useRef<Record<string, number>>({});
+  // Start times of the other contents of the presentation area, from the meeting
+  // the client already subscribes to (no subscription of our own)
+  const { data: contentTimes } = pluginApi.useMeetingData(
+    projectContentTimes,
+  ) as { data?: PresentationAreaContentTimes };
+  const screenshareStartedAt = toTime(contentTimes?.screenshare?.startedAt);
+  const externalVideoStartedAt = contentTimes?.externalVideo?.externalVideoUrl
+    ? toTime(contentTimes.externalVideo.startedSharingAt) : null;
 
   const currentUserPlaceholders: CurrentUserData = {
     name: currentUser?.name ?? '',
@@ -103,12 +150,14 @@ function GenericLinkShare(
           tooltip: 'A generic link tag has been detected in this slide, show it to all?',
           style: {},
           onClick: () => {
-            deleteEntryUrlToGenericLink([RESET_DATA_CHANNEL]);
-            pushEntryUrlToGenericLink({
+            const tagLink: DataToGenericLink = {
               url: tag.presenter,
               isUrlSameForRole: tag.presenter === tag.viewer,
               viewerUrl: tag.viewer,
-            });
+            };
+            if (isSameSharedLink(tagLink, sharedLinkRef.current)) return;
+            deleteEntryUrlToGenericLink([RESET_DATA_CHANNEL]);
+            pushEntryUrlToGenericLink(tagLink);
           },
         })
       ));
@@ -163,7 +212,9 @@ function GenericLinkShare(
         };
       }
     }
-    if (objectToDispatch) {
+    if (objectToDispatch && isSameSharedLink(objectToDispatch, sharedLink)) {
+      setShowModal(false);
+    } else if (objectToDispatch) {
       deleteEntryUrlToGenericLink([RESET_DATA_CHANNEL]);
       pushEntryUrlToGenericLink(objectToDispatch);
       setShowModal(false);
@@ -179,6 +230,10 @@ function GenericLinkShare(
       && urlToGenericLink
         .data[urlToGenericLink.data.length - 1]?.payloadJson
     ) {
+      const lastEntry = urlToGenericLink.data[urlToGenericLink.data.length - 1];
+      setLinkEntryId(lastEntry.entryId);
+      setLinkSharedAt(toTime(lastEntry.createdAt));
+      setSharedLink(lastEntry.payloadJson);
       setPreviousModalState(urlToGenericLink
         .data[
           urlToGenericLink.data.length - 1]?.payloadJson);
@@ -186,7 +241,7 @@ function GenericLinkShare(
         .data[
           urlToGenericLink.data.length - 1
         ]?.payloadJson.isUrlSameForRole;
-      if (!isUrlTheSame && !currentUser.presenter) {
+      if (!isUrlTheSame && !currentUser?.presenter) {
         const viewerUrl = urlToGenericLink
           .data[
             urlToGenericLink.data.length - 1
@@ -208,6 +263,9 @@ function GenericLinkShare(
         .data[urlToGenericLink.data.length - 1]?.payloadJson
     ) {
       setLink(null);
+      setLinkEntryId(null);
+      setLinkSharedAt(null);
+      setSharedLink(null);
       setPreviousModalState({
         isUrlSameForRole: true,
         url: null,
@@ -250,30 +308,85 @@ function GenericLinkShare(
     }
   }, [currentUser, showingPresentationContent]);
 
+  // Someone who joins (or reloads the page) while a link is already shared gets the
+  // data-channel entry before the current user and the user metadata. Resolving the
+  // placeholders then used to throw on the missing metadata and unmount the whole
+  // plugin, so that user never saw the link again. Wait for both before rendering,
+  // and render again if the resolved URL changes.
+  const placeholdersReady = !!currentUser && (!!userData || userDataLoading === false);
+  const resolvedLink = link && link !== '' && placeholdersReady
+    ? replaceUrlPlaceholders(link, mergePlaceholdersList(
+      currentUserPlaceholders,
+      userData?.user_metadata,
+    ))
+    : null;
+
   useEffect(() => {
-    if (link && link !== '') {
-      const placeholdersList = mergePlaceholdersList(
-        currentUserPlaceholders,
-        userData.user_metadata,
-      );
+    if (link && link !== '' && !resolvedLink) return undefined;
+    if (resolvedLink) {
       pluginApi.setGenericContentItems([]);
-      setGenericContentId(pluginApi.setGenericContentItems([
-        new GenericContentMainArea({
-          contentFunction: (element: HTMLElement) => {
-            const root = ReactDOM.createRoot(element);
-            root.render(
-              <GenericComponentLinkShare
-                link={replaceUrlPlaceholders(link, placeholdersList)}
-              />,
-            );
-            return root;
-          },
-        }),
-      ])[0]);
-    } else {
-      pluginApi.setGenericContentItems([]);
+      // Add the new item on the next tick. Removing the old item and adding the
+      // new one in the same render keeps the size of the client's presentation
+      // area pile, and the client only refreshes the shown content when that
+      // size changes: everyone would get the slides instead of the link.
+      const timeout = setTimeout(() => {
+        setGenericContentId(pluginApi.setGenericContentItems([
+          new GenericContentMainArea({
+            contentFunction: (element: HTMLElement) => {
+              const root = ReactDOM.createRoot(element);
+              root.render(
+                <GenericComponentLinkShare
+                  link={resolvedLink}
+                />,
+              );
+              return root;
+            },
+          }),
+        ])[0]);
+      }, 0);
+      return () => clearTimeout(timeout);
     }
-  }, [link]);
+    pluginApi.setGenericContentItems([]);
+    setGenericContentId('');
+    return undefined;
+  }, [resolvedLink, link, linkEntryId, raiseCount]);
+
+  // The presentation area shows whatever reached this client last. When a client
+  // reconnects, the screen share (or external video) remounts and lands on top
+  // of the link, even though the link was shared after it: that user stops seeing
+  // the link while the presenter still sees it. Compare server times and put the
+  // link back on top when older content is covering it.
+  useEffect(() => {
+    if (!link || !genericContentId || !linkSharedAt || !linkEntryId) return;
+    const linkIndex = currentLayout.map((gc) => (
+      gc.currentElement === UiLayouts.GENERIC_CONTENT && gc.genericContentId === genericContentId
+    )).lastIndexOf(true);
+    if (linkIndex === -1) return;
+    const coveringContent = currentLayout.slice(linkIndex + 1);
+    // Area minimized: nothing to fix now, this runs again when it is restored
+    if (coveringContent.length === 0 || !coveringContent[coveringContent.length - 1].isOpen) return;
+    const olderContent = coveringContent.find((gc) => {
+      if (gc.currentElement === UiLayouts.SCREEN_SHARE) {
+        return screenshareStartedAt !== null && screenshareStartedAt < linkSharedAt;
+      }
+      if (gc.currentElement === UiLayouts.EXTERNAL_VIDEO) {
+        return externalVideoStartedAt !== null && externalVideoStartedAt < linkSharedAt;
+      }
+      return false;
+    });
+    if (!olderContent) return;
+    const contentStartedAt = olderContent.currentElement === UiLayouts.SCREEN_SHARE
+      ? screenshareStartedAt : externalVideoStartedAt;
+    const key = `${linkEntryId}|${olderContent.currentElement}|${contentStartedAt}`;
+    const raises = raisesByContent.current[key] ?? 0;
+    if (raises >= MAX_RAISES_PER_CONTENT) return;
+    raisesByContent.current[key] = raises + 1;
+    pluginLogger.info(`Link covered by older ${olderContent.currentElement}, putting it back on top`);
+    setRaiseCount((count) => count + 1);
+  }, [
+    currentLayout, genericContentId, link, linkEntryId, linkSharedAt,
+    screenshareStartedAt, externalVideoStartedAt,
+  ]);
   return (
     <ModalToShareLink
       {...{
@@ -285,6 +398,7 @@ function GenericLinkShare(
         handleSendLinkToIframe,
         handleCheckboxChange,
         setLinkError,
+        isShareDisabled: isSameSharedLink(previousModalState, sharedLink),
       }}
     />
   );

@@ -8,11 +8,13 @@
     {
       "name": "urlToGenericLink",
       "pushPermission": [
-        "moderator"
+        "moderator",
+        "presenter"
       ],
       "replaceOrDeletePermission": [
         "creator",
-        "moderator"
+        "moderator",
+        "presenter"
       ]
     }
   ]
