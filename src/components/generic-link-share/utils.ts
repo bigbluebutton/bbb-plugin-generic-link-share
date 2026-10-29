@@ -87,3 +87,16 @@ export function isDefaultLinkUnchanged(
     && (modalState.isUrlSameForRole
       || (modalState.viewerUrl || '') === (defaultState.viewerUrl || ''));
 }
+
+// Whether sharing these links would only repeat the link already shared. The viewer
+// URL only counts when the roles get different URLs.
+export function isSameSharedLink(
+  newLink: DataToGenericLink,
+  sharedLink?: DataToGenericLink | null,
+): boolean {
+  if (!sharedLink) return false;
+  const isUrlSameForRole = newLink.isUrlSameForRole ?? true;
+  if (isUrlSameForRole !== (sharedLink.isUrlSameForRole ?? true)) return false;
+  if ((newLink.url || '') !== (sharedLink.url || '')) return false;
+  return isUrlSameForRole || (newLink.viewerUrl || '') === (sharedLink.viewerUrl || '');
+}

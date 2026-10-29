@@ -9,8 +9,9 @@ subscription MeetingSubscription {
 }
 `;
 
+// Join userdata does not change during the session: a query, not a subscription
 const USER_METADATA = `
- subscription {
+ query {
     user_metadata {
         parameter
         value
