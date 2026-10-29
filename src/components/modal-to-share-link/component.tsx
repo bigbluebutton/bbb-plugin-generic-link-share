@@ -37,6 +37,7 @@ export function ModalToShareLink(props: ModalToShareLinkProps) {
     handleSendLinkToIframe,
     handleCheckboxChange,
     setLinkError,
+    isShareDisabled,
   } = props;
 
   const [isUrlAlreadyFormated, setIsUrlAlreadyFormated] = useState<boolean>(false);
@@ -107,6 +108,7 @@ export function ModalToShareLink(props: ModalToShareLinkProps) {
               handleCheckboxChange={handleCheckboxChange}
               isUrlAlreadyFormated={isUrlAlreadyFormated}
               isViewerUrlAlreadyFormated={isViewerUrlAlreadyFormated}
+              isShareDisabled={isShareDisabled}
             />
           ) : (
             <div>

@@ -19,5 +19,6 @@
   "genericLinkSharePlugin.modal.linkForm.hidePreviewButton.label": "プレビューを非表示",
   "genericLinkSharePlugin.modal.linkForm.previewWarning": "「プレビューを表示」をクリックして、埋め込み時にウェブサイトが正しく動作するか確認してください（推奨）",
   "genericLinkSharePlugin.modal.linkForm.cancelButton.label": "キャンセル",
-  "genericLinkSharePlugin.modal.linkForm.shareButton.label": "コンテンツとして共有"
+  "genericLinkSharePlugin.modal.linkForm.shareButton.label": "コンテンツとして共有",
+  "genericLinkSharePlugin.modal.linkForm.shareButton.alreadySharedTooltip": "このリンクはすでに共有されています"
 }

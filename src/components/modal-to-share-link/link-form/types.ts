@@ -10,6 +10,7 @@ export interface LinkFormProps {
     handleCheckboxChange: () => void;
     isUrlAlreadyFormated: boolean;
     isViewerUrlAlreadyFormated: boolean;
+    isShareDisabled: boolean;
 }
 
 export interface UrlPreview {

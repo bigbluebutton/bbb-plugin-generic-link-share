@@ -19,5 +19,6 @@
   "genericLinkSharePlugin.modal.linkForm.hidePreviewButton.label": "Vorschau ausblenden",
   "genericLinkSharePlugin.modal.linkForm.previewWarning": "Klicken Sie auf „Vorschau anzeigen“, um zu prüfen, ob die Website eingebettet korrekt funktioniert (empfohlen)",
   "genericLinkSharePlugin.modal.linkForm.cancelButton.label": "Abbrechen",
-  "genericLinkSharePlugin.modal.linkForm.shareButton.label": "Als Inhalt teilen"
+  "genericLinkSharePlugin.modal.linkForm.shareButton.label": "Als Inhalt teilen",
+  "genericLinkSharePlugin.modal.linkForm.shareButton.alreadySharedTooltip": "Dieser Link wird bereits geteilt"
 }

@@ -10,7 +10,8 @@ export interface ModalToShareLinkProps {
     linkError: string;
     setLinkError: React.Dispatch<React.SetStateAction<string>>;
     handleSendLinkToIframe: (e: React.SyntheticEvent) => void;
-    handleCheckboxChange: () => void
+    handleCheckboxChange: () => void;
+    isShareDisabled: boolean;
 }
 export interface UrlPreview {
     url: string;

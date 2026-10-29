@@ -19,5 +19,6 @@
   "genericLinkSharePlugin.modal.linkForm.hidePreviewButton.label": "Ocultar prévia",
   "genericLinkSharePlugin.modal.linkForm.previewWarning": "Clique em mostrar prévia para verificar se o site funciona corretamente quando incorporado (recomendado)",
   "genericLinkSharePlugin.modal.linkForm.cancelButton.label": "Cancelar",
-  "genericLinkSharePlugin.modal.linkForm.shareButton.label": "Compartilhar como conteúdo"
+  "genericLinkSharePlugin.modal.linkForm.shareButton.label": "Compartilhar como conteúdo",
+  "genericLinkSharePlugin.modal.linkForm.shareButton.alreadySharedTooltip": "Este link já está sendo compartilhado"
 }

@@ -19,5 +19,6 @@
   "genericLinkSharePlugin.modal.linkForm.hidePreviewButton.label": "Hide preview",
   "genericLinkSharePlugin.modal.linkForm.previewWarning": "Click show preview to check if the website works correctly when embedded (recommended)",
   "genericLinkSharePlugin.modal.linkForm.cancelButton.label": "Cancel",
-  "genericLinkSharePlugin.modal.linkForm.shareButton.label": "Share as content"
+  "genericLinkSharePlugin.modal.linkForm.shareButton.label": "Share as content",
+  "genericLinkSharePlugin.modal.linkForm.shareButton.alreadySharedTooltip": "This link is already being shared"
 }

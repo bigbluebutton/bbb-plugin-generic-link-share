@@ -19,5 +19,6 @@
   "genericLinkSharePlugin.modal.linkForm.hidePreviewButton.label": "Masquer l'aperçu",
   "genericLinkSharePlugin.modal.linkForm.previewWarning": "Cliquez sur « Afficher l'aperçu » pour vérifier que le site web fonctionne correctement une fois intégré (recommandé)",
   "genericLinkSharePlugin.modal.linkForm.cancelButton.label": "Annuler",
-  "genericLinkSharePlugin.modal.linkForm.shareButton.label": "Partager comme contenu"
+  "genericLinkSharePlugin.modal.linkForm.shareButton.label": "Partager comme contenu",
+  "genericLinkSharePlugin.modal.linkForm.shareButton.alreadySharedTooltip": "Ce lien est déjà partagé"
 }

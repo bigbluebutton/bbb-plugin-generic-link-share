@@ -23,6 +23,11 @@ const intlMessages = defineMessages({
     description: 'Label of the button that shares the link as content',
     defaultMessage: 'Share as content',
   },
+  alreadySharedTooltip: {
+    id: 'genericLinkSharePlugin.modal.linkForm.shareButton.alreadySharedTooltip',
+    description: 'Tooltip of the disabled share button when the link is already being shared',
+    defaultMessage: 'This link is already being shared',
+  },
 });
 
 export function LinkForm(props: LinkFormProps) {
@@ -35,6 +40,7 @@ export function LinkForm(props: LinkFormProps) {
     handleCheckboxChange,
     isUrlAlreadyFormated,
     isViewerUrlAlreadyFormated,
+    isShareDisabled,
   } = props;
 
   const {
@@ -115,7 +121,14 @@ export function LinkForm(props: LinkFormProps) {
         >
           {intl.formatMessage(intlMessages.cancelButtonLabel)}
         </Styled.ButtonStyle>
-        <Styled.SendingButton type="submit" value={intl.formatMessage(intlMessages.shareButtonLabel)} />
+        <Styled.SendingButton
+          type="submit"
+          value={intl.formatMessage(intlMessages.shareButtonLabel)}
+          disabled={isShareDisabled}
+          title={isShareDisabled
+            ? intl.formatMessage(intlMessages.alreadySharedTooltip)
+            : undefined}
+        />
       </Styled.ButtonsWrapper>
     </Styled.FormToSendUrl>
   );
