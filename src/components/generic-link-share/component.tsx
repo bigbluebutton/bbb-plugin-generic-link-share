@@ -13,7 +13,9 @@ import {
   pluginLogger,
   PresentationToolbarButton,
 } from 'bigbluebutton-html-plugin-sdk';
+import { defineMessages } from 'react-intl';
 import { parseTags } from '../utils';
+import { useGetInternationalization } from '../../commons/hooks';
 
 import GenericComponentLinkShare from '../generic-component/component';
 
@@ -29,6 +31,54 @@ import { LinkTag } from '../modal-to-share-link/types';
 import { REGEX } from './constants';
 import { isSameSharedLink, mergePlaceholdersList, replaceUrlPlaceholders } from './utils';
 import { USER_METADATA } from './subscription';
+
+const intlMessages = defineMessages({
+  presentationToolbarButtonLabel: {
+    id: 'genericLinkSharePlugin.presentationToolbar.playButton.label',
+    description: 'Label of the presentation toolbar button that shares a link tag found in the slide',
+    defaultMessage: 'Play {title}',
+  },
+  presentationToolbarButtonTooltip: {
+    id: 'genericLinkSharePlugin.presentationToolbar.playButton.tooltip',
+    description: 'Tooltip of the presentation toolbar button that shares a link tag found in the slide',
+    defaultMessage: 'A generic link tag has been detected in this slide, show it to all?',
+  },
+  editLinksLabel: {
+    id: 'genericLinkSharePlugin.mediaArea.editLinks.label',
+    description: 'Label of the media area option to edit the shared link(s)',
+    defaultMessage: 'Edit link(s)',
+  },
+  editLinksTooltip: {
+    id: 'genericLinkSharePlugin.mediaArea.editLinks.tooltip',
+    description: 'Tooltip of the media area option to edit the shared link(s)',
+    defaultMessage: 'Edit previously set links',
+  },
+  removeLinkShareLabel: {
+    id: 'genericLinkSharePlugin.mediaArea.removeLinkShare.label',
+    description: 'Label of the media area option to stop sharing the link',
+    defaultMessage: 'Remove link share',
+  },
+  removeLinkShareTooltip: {
+    id: 'genericLinkSharePlugin.mediaArea.removeLinkShare.tooltip',
+    description: 'Tooltip of the media area option to stop sharing the link',
+    defaultMessage: 'Remove generic link from presentation area',
+  },
+  shareLinkLabel: {
+    id: 'genericLinkSharePlugin.mediaArea.shareLink.label',
+    description: 'Label of the media area option to share a link',
+    defaultMessage: 'Share Website Link as Content',
+  },
+  shareLinkTooltip: {
+    id: 'genericLinkSharePlugin.mediaArea.shareLink.tooltip',
+    description: 'Tooltip of the media area option to share a link',
+    defaultMessage: 'Share a generic link into the presentation area',
+  },
+  malformedLinkError: {
+    id: 'genericLinkSharePlugin.modal.error.malformedLink',
+    description: 'Error shown when the link typed in the modal is not a valid URL',
+    defaultMessage: 'Link is malformed, please insert a valid one',
+  },
+});
 
 // How many times the link may be put back on top of the same older content,
 // so two contents fighting for the presentation area can never loop.
@@ -60,6 +110,7 @@ function GenericLinkShare(
 ): React.ReactElement {
   BbbPluginSdk.initialize(uuid);
   const pluginApi: PluginApi = BbbPluginSdk.getPluginApi(uuid);
+  const { intl } = useGetInternationalization(pluginApi);
   const { data: userData, loading: userDataLoading } = pluginApi
     .useCustomQuery<UserMetadataGraphqlResponse>(USER_METADATA);
   const { data: currentUser } = pluginApi.useCurrentUser();
@@ -146,8 +197,11 @@ function GenericLinkShare(
     if (currentUser?.presenter) {
       const buttons = tags.map((tag) => (
         new PresentationToolbarButton({
-          label: `Play ${tag.title}`,
-          tooltip: 'A generic link tag has been detected in this slide, show it to all?',
+          label: intl.formatMessage(
+            intlMessages.presentationToolbarButtonLabel,
+            { title: tag.title },
+          ),
+          tooltip: intl.formatMessage(intlMessages.presentationToolbarButtonTooltip),
           style: {},
           onClick: () => {
             const tagLink: DataToGenericLink = {
@@ -183,8 +237,8 @@ function GenericLinkShare(
 
   useEffect(() => {
     const { data: currentPresentation } = currentPresentationResponse;
-    if (currentUser?.presenter) handleFetchPresentationData(currentPresentation);
-  }, [currentPresentationResponse, currentUser]);
+    if (intl && currentUser?.presenter) handleFetchPresentationData(currentPresentation);
+  }, [currentPresentationResponse, currentUser, intl]);
 
   const handleSendLinkToIframe = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -219,7 +273,7 @@ function GenericLinkShare(
       pushEntryUrlToGenericLink(objectToDispatch);
       setShowModal(false);
     } else {
-      setLinkError('Link is malformed, please insert a valid one');
+      setLinkError(intl.formatMessage(intlMessages.malformedLinkError));
     }
   };
 
@@ -276,13 +330,14 @@ function GenericLinkShare(
 
   // Set extensible areas (depending o the role of the user)
   useEffect(() => {
+    if (!intl) return;
     if (currentUser?.presenter) {
       const mediaAreaItemsToRender = [];
       if (showingPresentationContent) {
         mediaAreaItemsToRender.push(new MediaAreaOption({
-          label: 'Edit link(s)',
+          label: intl.formatMessage(intlMessages.editLinksLabel),
           icon: { iconName: 'copy' },
-          tooltip: 'Edit previously set links',
+          tooltip: intl.formatMessage(intlMessages.editLinksTooltip),
           allowed: true,
           onClick: () => {
             setShowModal(true);
@@ -290,10 +345,13 @@ function GenericLinkShare(
         }));
       }
       mediaAreaItemsToRender.push(new MediaAreaOption({
-        label: showingPresentationContent ? 'Remove link share' : 'Share Website Link as Content',
+        label: intl.formatMessage(showingPresentationContent
+          ? intlMessages.removeLinkShareLabel
+          : intlMessages.shareLinkLabel),
         icon: { iconName: 'copy' },
-        tooltip: showingPresentationContent ? 'Remove generic link from presentation area'
-          : 'Share a generic link into the presentation area',
+        tooltip: intl.formatMessage(showingPresentationContent
+          ? intlMessages.removeLinkShareTooltip
+          : intlMessages.shareLinkTooltip),
         allowed: true,
         onClick: showingPresentationContent ? () => {
           deleteEntryUrlToGenericLink([RESET_DATA_CHANNEL]);
@@ -306,7 +364,7 @@ function GenericLinkShare(
     } else {
       pluginApi.setMediaAreaItems([]);
     }
-  }, [currentUser, showingPresentationContent]);
+  }, [currentUser, showingPresentationContent, intl]);
 
   // Someone who joins (or reloads the page) while a link is already shared gets the
   // data-channel entry before the current user and the user metadata. Resolving the
@@ -387,9 +445,13 @@ function GenericLinkShare(
     currentLayout, genericContentId, link, linkEntryId, linkSharedAt,
     screenshareStartedAt, externalVideoStartedAt,
   ]);
+
+  if (!intl) return null;
+
   return (
     <ModalToShareLink
       {...{
+        intl,
         setPreviousModalState,
         previousModalState,
         showModal,
