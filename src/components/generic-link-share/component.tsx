@@ -144,9 +144,7 @@ function GenericLinkShare(
   const requestCurrentPage = (currentTxtUri: string) => {
     const url = new URL(currentTxtUri, window.location.origin);
     const sessionToken = pluginApi.getSessionToken?.();
-    if (sessionToken && !url.searchParams.has('sessionToken')) {
-      url.searchParams.set('sessionToken', sessionToken);
-    }
+    if (sessionToken) url.searchParams.set('sessionToken', sessionToken);
     return fetch(url.toString()).then((response) => {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return response.text();
