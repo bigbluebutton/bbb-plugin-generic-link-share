@@ -9,6 +9,8 @@ export interface LinkFormProps {
     isUrlAlreadyFormated: boolean;
     isViewerUrlAlreadyFormated: boolean;
     isShareDisabled: boolean;
+    isSharing: boolean;
+    handleStopSharing: () => void;
 }
 
 export interface UrlPreview {
