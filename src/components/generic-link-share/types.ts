@@ -34,6 +34,14 @@ export interface UserMetadataGraphqlResponse {
     user_metadata: UserMetadata[];
 }
 
+export type PluginSettings = Record<string, unknown>;
+
+// Link suggested to the presenter, from the plugin_GenericLinkShare_* parameters of /create
+export interface DefaultLink {
+  modalState: DataToGenericLink;
+  description: string;
+}
+
 // Fields of the meeting already subscribed by the client and delivered through
 // useMeetingData. The screen share comes in the same object but is not typed in the SDK.
 export interface PresentationAreaContentTimes {

@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import {
+  useEffect, useMemo, useRef, useState,
+} from 'react';
 import * as ReactDOM from 'react-dom/client';
 import {
   MediaAreaOption,
@@ -27,7 +29,10 @@ import {
 import { ModalToShareLink } from '../modal-to-share-link/component';
 import { LinkTag } from '../modal-to-share-link/types';
 import { REGEX } from './constants';
-import { isSameSharedLink, mergePlaceholdersList, replaceUrlPlaceholders } from './utils';
+import {
+  EMPTY_MODAL_STATE, getDefaultLink, isSameSharedLink, mergePlaceholdersList,
+  replaceUrlPlaceholders,
+} from './utils';
 import { USER_METADATA } from './subscription';
 
 // How many times the link may be put back on top of the same older content,
@@ -65,6 +70,8 @@ function GenericLinkShare(
   const { data: currentUser } = pluginApi.useCurrentUser();
   const { data: urlToGenericLink, pushEntry: pushEntryUrlToGenericLink, deleteEntry: deleteEntryUrlToGenericLink } = pluginApi.useDataChannel<DataToGenericLink>('urlToGenericLink');
   const currentPresentationResponse = pluginApi.useCurrentPresentation();
+  const { data: pluginSettings } = pluginApi.usePluginSettings();
+  const defaultLink = useMemo(() => getDefaultLink(pluginSettings), [pluginSettings]);
   const currentLayout = pluginApi.useUiData(LayoutPresentationAreaUiDataNames.CURRENT_ELEMENT, [{
     isOpen: true,
     currentElement: UiLayouts.WHITEBOARD,
@@ -74,10 +81,9 @@ function GenericLinkShare(
   const [showingPresentationContent, setShowingPresentationContent] = useState(false);
   const [link, setLink] = useState<string>(null);
   const [linkError, setLinkError] = useState<string>(null);
-  const [previousModalState, setPreviousModalState] = useState<DataToGenericLink>({
-    isUrlSameForRole: true,
-    url: null,
-  });
+  const [previousModalState, setPreviousModalState] = useState<DataToGenericLink>(
+    EMPTY_MODAL_STATE,
+  );
   // Links of the entry being shown. Sharing them again would recreate the generic
   // content for everyone and lose what users were doing in the page, so it is not
   // allowed. Also kept in a ref: the toolbar buttons only see the state from when
@@ -266,13 +272,15 @@ function GenericLinkShare(
       setLinkEntryId(null);
       setLinkSharedAt(null);
       setSharedLink(null);
-      setPreviousModalState({
-        isUrlSameForRole: true,
-        url: null,
-      });
+      setPreviousModalState(defaultLink.modalState);
       handleChangePresentationAreaContent(false);
     }
   }, [urlToGenericLink, currentUser]);
+
+  // Suggest the default link once the settings arrive, unless a link is already set
+  useEffect(() => {
+    setPreviousModalState((p) => ((p.url || p.viewerUrl) ? p : defaultLink.modalState));
+  }, [defaultLink]);
 
   // Set extensible areas (depending o the role of the user)
   useEffect(() => {
@@ -392,6 +400,7 @@ function GenericLinkShare(
       {...{
         setPreviousModalState,
         previousModalState,
+        defaultLink,
         showModal,
         handleCloseModal,
         linkError,

@@ -27,6 +27,29 @@ pluginManifests=[{"url":"<your-domain>/path/to/manifest.json"}]
 Or additionally, you can add this same configuration in the `.properties` file from `bbb-web` in `/usr/share/bbb-web/WEB-INF/classes/bigbluebutton.properties`
 
 
+## Default URL
+
+A link can be suggested to the presenter when the meeting is created. The first time the presenter opens the plugin (and whenever no link is being shared), the share form comes filled with it, so they only need to click "Share as content".
+
+It is set with these `/create` parameters. All of them are optional: send any combination of them, or none, in which case the plugin works as before and the form comes empty.
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `plugin_GenericLinkShare_default-url` | No | URL suggested to the presenter. When it is the only URL given, it is suggested for everyone ("Same URL for presenter and viewers" stays checked). |
+| `plugin_GenericLinkShare_default-viewer-url` | No | URL suggested for the viewers. When it differs from `default-url`, "Same URL for presenter and viewers" comes unchecked with each URL in its field. |
+| `plugin_GenericLinkShare_default-url-description` | No | Text shown below the suggested URL(s), to tell the presenter what the link is. It disappears as soon as the presenter changes the link. |
+
+Example:
+
+```
+plugin_GenericLinkShare_default-url=https://example.com/vote/{genericLinkShare_poll}
+plugin_GenericLinkShare_default-url-description=Voting page for this meeting
+```
+
+The suggested URL may use the [URL placeholders](#url-placeholders) below, which are replaced for each participant when the link is shown.
+
+These parameters reach the plugin through the `settingsSchema` of `manifest.json`: `bbb-web` writes each value into the `defaultValue` of the matching setting, with an empty fallback (`${plugin_GenericLinkShare_<param>:}`), so a parameter that is not sent just leaves its setting empty and nothing is suggested. The settings are marked `"required": true` in `settingsSchema` only because that is when BigBlueButton applies a setting's `defaultValue`; this does not make the `/create` parameters required. The values are inserted as-is into the manifest JSON, so they must not contain double quotes (`"`) or backslashes (`\`). The same settings can also be set server-wide in `/etc/bigbluebutton/bbb-html5.yml` (`defaultUrl`, `defaultViewerUrl` and `defaultUrlDescription` under the `GenericLinkShare` plugin), which take precedence over the `/create` parameters.
+
 ## URL Placeholders
 
 When sharing a link, you can use placeholders in the URL that will be dynamically replaced with user or session information. This allows you to personalize the shared content for each participant.
