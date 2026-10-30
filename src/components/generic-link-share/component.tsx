@@ -139,8 +139,17 @@ function GenericLinkShare(
     }
   };
 
-  const requestCurrentPage = (currentTxtUri: string) => fetch(currentTxtUri)
-    .then((response) => response.text());
+  // bbb-web only serves the slide files to requests carrying the user's sessionToken
+  // (the client adds it to the svg URLs too); without it the request fails with 401
+  const requestCurrentPage = (currentTxtUri: string) => {
+    const url = new URL(currentTxtUri, window.location.origin);
+    const sessionToken = pluginApi.getSessionToken?.();
+    if (sessionToken) url.searchParams.set('sessionToken', sessionToken);
+    return fetch(url.toString()).then((response) => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.text();
+    });
+  };
 
   const addButtonsToPresentationToolbar = (tags : LinkTag[]) => {
     if (currentUser?.presenter) {
