@@ -29,6 +29,11 @@ export function TextInputComponent(props: TextInputComponentProps) {
   } else {
     label = 'Presenter URL: ';
   }
+  // Each input needs its own name and id: the submit handler reads them by name
+  // (`link` and `viewerLink`), and a shared name would turn `form.link` into a list
+  const inputName = isViewer ? 'viewerLink' : 'link';
+  const inputId = isViewer ? 'viewer-link-receiver' : 'link-receiver';
+
   const styleOfLabelInPreviewMode: React.CSSProperties = !isUrlSameForRole
     ? { marginBottom: '1rem' }
     : null;
@@ -44,18 +49,18 @@ export function TextInputComponent(props: TextInputComponentProps) {
     <Styled.FormToSendUrlItem
       style={styleOfLabelInPreviewMode}
       as="label"
-      htmlFor="link-receiver"
+      htmlFor={inputId}
     >
       <Styled.LabelForm>
         {label}
       </Styled.LabelForm>
       <div style={styleOfPreviewButtonWrapper}>
         <Styled.LabelFormTextInput
-          id="link-receiver"
+          id={inputId}
           ref={inputRef}
           value={url}
           type="text"
-          name="link"
+          name={inputName}
           placeholder="https://..."
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setPreviousModalState((p) => {
