@@ -16,6 +16,8 @@ export function LinkForm(props: LinkFormProps) {
     isUrlAlreadyFormated,
     isViewerUrlAlreadyFormated,
     isShareDisabled,
+    isSharing,
+    handleStopSharing,
   } = props;
 
   const {
@@ -84,7 +86,22 @@ export function LinkForm(props: LinkFormProps) {
       </Styled.FormWrapper>
       <Styled.BottomSeparator />
       <Styled.ButtonsWrapper>
+        {isSharing && (
+          <Styled.StopSharingButton
+            type="button"
+            data-test="stopGenericLinkShareButton"
+            onClick={() => {
+              setUrlToPreview(null);
+              handleStopSharing();
+            }}
+          >
+            <i className="icon-bbb-close" />
+            Stop sharing
+          </Styled.StopSharingButton>
+        )}
         <Styled.ButtonStyle
+          // Not a submit button: pressing Enter in a URL field must share, not cancel
+          type="button"
           style={{ marginRight: '.3rem' }}
           color="secondary"
           onClick={() => {
@@ -96,7 +113,7 @@ export function LinkForm(props: LinkFormProps) {
         </Styled.ButtonStyle>
         <Styled.SendingButton
           type="submit"
-          value="Share as content"
+          value={isSharing ? 'Share new link' : 'Share as content'}
           disabled={isShareDisabled}
           title={isShareDisabled ? 'This link is already being shared' : undefined}
         />
