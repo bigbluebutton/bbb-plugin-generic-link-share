@@ -100,6 +100,8 @@ export function LinkForm(props: LinkFormProps) {
           </Styled.StopSharingButton>
         )}
         <Styled.ButtonStyle
+          // Not a submit button: pressing Enter in a URL field must share, not cancel
+          type="button"
           style={{ marginRight: '.3rem' }}
           color="secondary"
           onClick={() => {
