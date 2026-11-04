@@ -1,13 +1,38 @@
 import { useState } from 'react';
 import * as React from 'react';
 import Iframe from 'react-iframe';
+import { defineMessages } from 'react-intl';
 import * as Styled from './styles';
 import { TextInputComponent } from './text-input/component';
 import { CheckboxInputComponent } from './checkbox-input/component';
 import { LinkFormProps, UrlPreview } from './types';
 
+const intlMessages = defineMessages({
+  previewWarning: {
+    id: 'genericLinkSharePlugin.modal.linkForm.previewWarning',
+    description: 'Hint recommending to preview the link before sharing it',
+    defaultMessage: 'Click show preview to check if the website works correctly when embedded (recommended)',
+  },
+  cancelButtonLabel: {
+    id: 'genericLinkSharePlugin.modal.linkForm.cancelButton.label',
+    description: 'Label of the button that closes the modal without sharing',
+    defaultMessage: 'Cancel',
+  },
+  shareButtonLabel: {
+    id: 'genericLinkSharePlugin.modal.linkForm.shareButton.label',
+    description: 'Label of the button that shares the link as content',
+    defaultMessage: 'Share as content',
+  },
+  alreadySharedTooltip: {
+    id: 'genericLinkSharePlugin.modal.linkForm.shareButton.alreadySharedTooltip',
+    description: 'Tooltip of the disabled share button when the link is already being shared',
+    defaultMessage: 'This link is already being shared',
+  },
+});
+
 export function LinkForm(props: LinkFormProps) {
   const {
+    intl,
     previousModalState,
     setPreviousModalState,
     handleCloseModal,
@@ -49,10 +74,12 @@ export function LinkForm(props: LinkFormProps) {
         )}
         <Styled.FormBody>
           <CheckboxInputComponent
+            intl={intl}
             isUrlSameForRole={isUrlSameForRole}
             handleCheckboxChange={handleCheckboxChange}
           />
           <TextInputComponent
+            intl={intl}
             setPreviousModalState={setPreviousModalState}
             isUrlSameForRole={isUrlSameForRole}
             isUrlAlreadyFormated={isUrlAlreadyFormated}
@@ -64,6 +91,7 @@ export function LinkForm(props: LinkFormProps) {
           />
           {!isUrlSameForRole && (
             <TextInputComponent
+              intl={intl}
               setPreviousModalState={setPreviousModalState}
               isUrlSameForRole={isUrlSameForRole}
               isUrlAlreadyFormated={isViewerUrlAlreadyFormated}
@@ -76,8 +104,7 @@ export function LinkForm(props: LinkFormProps) {
           )}
           {(isUrlAlreadyFormated || isViewerUrlAlreadyFormated) && (
             <Styled.WarningIframeMessage>
-              Click show preview to check if it
-              the website works correctly when embedded (recommended)
+              {intl.formatMessage(intlMessages.previewWarning)}
             </Styled.WarningIframeMessage>
           )}
         </Styled.FormBody>
@@ -92,13 +119,15 @@ export function LinkForm(props: LinkFormProps) {
             handleCloseModal();
           }}
         >
-          Cancel
+          {intl.formatMessage(intlMessages.cancelButtonLabel)}
         </Styled.ButtonStyle>
         <Styled.SendingButton
           type="submit"
-          value="Share as content"
+          value={intl.formatMessage(intlMessages.shareButtonLabel)}
           disabled={isShareDisabled}
-          title={isShareDisabled ? 'This link is already being shared' : undefined}
+          title={isShareDisabled
+            ? intl.formatMessage(intlMessages.alreadySharedTooltip)
+            : undefined}
         />
       </Styled.ButtonsWrapper>
     </Styled.FormToSendUrl>
