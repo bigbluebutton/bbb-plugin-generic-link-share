@@ -18,6 +18,8 @@ export function ModalToShareLink(props: ModalToShareLinkProps) {
     handleCheckboxChange,
     setLinkError,
     isShareDisabled,
+    isSharing,
+    handleStopSharing,
   } = props;
 
   const [isUrlAlreadyFormated, setIsUrlAlreadyFormated] = useState<boolean>(false);
@@ -67,7 +69,7 @@ export function ModalToShareLink(props: ModalToShareLinkProps) {
           display: 'flex',
         }}
       >
-        <h1 style={{ margin: '5px 0' }}>Share your link</h1>
+        <h1 style={{ margin: '5px 0' }}>{isSharing ? 'Shared website' : 'Share a website'}</h1>
         <div
           style={{
             width: '100%',
@@ -88,6 +90,8 @@ export function ModalToShareLink(props: ModalToShareLinkProps) {
               isUrlAlreadyFormated={isUrlAlreadyFormated}
               isViewerUrlAlreadyFormated={isViewerUrlAlreadyFormated}
               isShareDisabled={isShareDisabled}
+              isSharing={isSharing}
+              handleStopSharing={handleStopSharing}
             />
           ) : (
             <div>

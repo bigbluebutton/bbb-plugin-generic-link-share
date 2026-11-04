@@ -10,6 +10,8 @@ export interface ModalToShareLinkProps {
     handleSendLinkToIframe: (e: React.SyntheticEvent) => void;
     handleCheckboxChange: () => void;
     isShareDisabled: boolean;
+    isSharing: boolean;
+    handleStopSharing: () => void;
 }
 export interface UrlPreview {
     url: string;

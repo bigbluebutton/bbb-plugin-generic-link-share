@@ -8,8 +8,41 @@ const colorGrayLightest = 'var(--color-gray-lightest, #D4D9DF)';
 const lineHeightComputed = '1rem';
 const mdPaddingX = '1rem';
 
+const colorDanger = 'var(--color-danger, #DF2721)';
+const colorDangerDark = 'var(--color-danger-dark, #AE1010)';
+
 export const ButtonsWrapper = styled.div`
-  align-self: flex-end;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+`;
+
+// Kept apart from Cancel and Share, on the other side, as it ends the share for everyone
+export const StopSharingButton = styled.button`
+  margin-right: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  border: 3px solid transparent;
+  border-radius: 2px;
+  font-weight: 600;
+  font-size: calc(1rem * 0.85);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  padding: 0.45rem 1rem;
+  color: #fff;
+  background-color: ${colorDanger};
+
+  &:hover {
+    background-color: ${colorDangerDark};
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 ${borderSize} ${colorDanger};
+  }
 `;
 
 export const ButtonStyle = styled.button<ButtonStyleProps>`
