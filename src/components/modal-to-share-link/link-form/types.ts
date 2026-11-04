@@ -1,8 +1,9 @@
-import { DataToGenericLink } from '../../generic-link-share/types';
+import { DataToGenericLink, DefaultLink } from '../../generic-link-share/types';
 
 export interface LinkFormProps {
     previousModalState: DataToGenericLink;
     setPreviousModalState: React.Dispatch<React.SetStateAction<DataToGenericLink>>;
+    defaultLink: DefaultLink;
     handleCloseModal: () => void;
     handleSendLinkToIframe: (e: React.SyntheticEvent) => void;
     handleCheckboxChange: () => void;
