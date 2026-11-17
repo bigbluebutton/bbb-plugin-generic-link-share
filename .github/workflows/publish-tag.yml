@@ -20,6 +20,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version-file: '.nvmrc'
+
     - name: Get triggering user's email
       run: |
         user_email=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/users/${{ github.actor }} | jq -r '.email')
