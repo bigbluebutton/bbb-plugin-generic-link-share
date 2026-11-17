@@ -33,7 +33,9 @@ jobs:
 
       - name: Set up Node.js
         run: |
-          curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
+          NODE_MAJOR=$(tr -d 'v[:space:]' < .nvmrc | cut -d. -f1)
+          [[ "$NODE_MAJOR" =~ ^[0-9]+$ ]] || { echo "::error::.nvmrc must hold a Node major version, got '$NODE_MAJOR'"; exit 1; }
+          curl -fsSL "https://deb.nodesource.com/setup_${NODE_MAJOR}.x" | sudo -E bash -
             sudo apt-get install -y nodejs
       - name: Verify Node.js installation
         run: |
